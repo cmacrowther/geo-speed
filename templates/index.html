@@ -64,8 +64,8 @@
         console.log(pos);
         $.post("/submit",
                 {
-                    longitude: "-63",
-                    latitude: "45",
+                    longitude: pos.longitude,
+                    latitude: pos.latitude,
                     upload: "1",
                     download: "1",
                     isp: "Rogers"
