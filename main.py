@@ -49,6 +49,18 @@ class SubmitHandler(webapp2.RequestHandler):
         entity = Result(location =ndb.GeoPt(latitude, longitude), mbps_upload=upload, mbps_download=download, isp=isp, friendly_location=friendly_location)
         entity.put()
 
+        results = Result.query().fetch()
+        resultList = []
+        for obj in results:
+            resultList.append({'longitude': obj.location.lon,
+                               'latitude': obj.location.lat,
+                               'upload': obj.mbps_upload,
+                               'download': obj.mbps_download,
+                                'friendly_location': obj.friendly_location,
+                               'isp': obj.isp})
+        theJson = json.dumps(resultList)
+        self.response.write(theJson)
+
 """
     return results back to the client in JSON format.
 """
