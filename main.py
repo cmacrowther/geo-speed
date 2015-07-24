@@ -67,7 +67,7 @@ class ReturnHandler(webapp2.RequestHandler):
         self.response.write(theJson)
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        template = JINJA_ENVIRONMENT.get_template("TestForm.html")
+        template = JINJA_ENVIRONMENT.get_template("index.html")
         self.response.write((template.render({})))
 
 app = webapp2.WSGIApplication([
