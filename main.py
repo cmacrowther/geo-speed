@@ -28,7 +28,7 @@ class Result(ndb.Model):
     time = ndb.DateTimeProperty(auto_now_add=True)
     mbps_upload = ndb.FloatProperty(required=True)
     mbps_download = ndb.FloatProperty(required=True)
-    friendly_location = ndb.StringProperty(s)
+    friendly_location = ndb.StringProperty()
     isp = ndb.StringProperty()
 """
     Handels adding the location and speed to the datastore. Should
@@ -53,7 +53,7 @@ class SubmitHandler(webapp2.RequestHandler):
 """
 class ReturnHandler(webapp2.RequestHandler):
     def post(self):
-        pass
+
 
 
 class MainHandler(webapp2.RequestHandler):
