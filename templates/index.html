@@ -9,16 +9,23 @@
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
+    <link rel="stylesheet" href="./custom.css">
 <!-- Latest compiled and minified JavaScript -->
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <p id="message">The message</p>
-    <form>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content loadingModal">
+        <h1>Geo-Speed</h1>
+        <p>Geo-Speed is a web app designed by Todd, Colin, Connor, and Adam for the IT Garage Hackathon.
+            The premise of Geo-Speed is to provide users with various connection speeds of users within the region.</p>
+        <p>Enter your address below and we will calculate your network speed and plot it on a map.</p>
+         <form>
+        <div class="col-xs-12 form-group">
+            <label for="exampleInputEmail1">Street Address</label>
+            <input type="text" class="form-control" id="exampleAddress1" placeholder="Street Address">
         </div>
         <input type="submit" value="Get new message" onclick="$.post('/submit',{message: document.getElementById('exampleInputEmail1')},
         function(data, status){
@@ -26,7 +33,34 @@
             document.getElementById('message').innerHTML = message;
         });">
     </form>
-    <script>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="$.post('/submit',{message: document.getElementById('exampleInputEmail1')},
+        function(data, status){
+            const message = data.message;
+            document.getElementById('message').innerHTML = message;
+        });">Plot my data</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="container">
+    <div class="row">
+     <div class="col-xs-12 text-center"><H1>Geo-Speed</H1></div><hr/>
+     <div class="col-xs-6 col-md-4"><p>Different speeds according to location</p></div>
+    </div>
+    <div class="row">
+     <div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+      <div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+      <div class="clearfix visible-xs-block"></div>
+      <div class="col-xs-6 col-sm-4">.col-xs-6 .col-sm-4</div>
+    </div>
+    <p id="message">The message</p>
+    <script type="text/javascript">
+    $(window).load(function(){
+        $('#myModal').modal('show');
+    });
     </script>
+    </div>>
 </body>
 </html>
