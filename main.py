@@ -23,11 +23,12 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-class Results(ndb.Model):
+class Result(ndb.Model):
     location = ndb.GeoPtProperty(required=True)
     time = ndb.DateTimeProperty(auto_now_add=True)
     mbps_upload = ndb.FloatProperty(required=True)
     mbps_download = ndb.FloatProperty(required=True)
+    friendly_location = ndb.StringProperty(s)
     isp = ndb.StringProperty()
 """
     Handels adding the location and speed to the datastore. Should
@@ -37,7 +38,15 @@ class Results(ndb.Model):
 """
 class SubmitHandler(webapp2.RequestHandler):
     def post(self):
-        pass
+        longitude = self.request.get('longitude')
+        latitude = self.request.get('latitude')
+        upload = self.request.get('upload')
+        download = self. request.get('download')
+        isp = self.request.get('isp')
+        friendly_location = self.request.get('friendly_location')
+
+        entity = Result(locaion=ndb.GeoPt(latitude, longitude), mbps_upload=upload, mbps_download=download, isp=isp, friendly_location=friendly_location)
+        entity.put()
 
 """
     return results back to the client in JSON format.
