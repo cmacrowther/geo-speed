@@ -30,6 +30,8 @@
             <input type="text" class="form-control" id="address" value="">
           </div>
             <script>
+
+
             if (navigator.geolocation) {
                 var options = {
               enableHighAccuracy: true,
@@ -38,7 +40,7 @@
             };
 
             function success(pos) {
-              var crd = pos.coords;
+              crd = pos.coords;
 
               console.log('Your current position is:');
               console.log('Latitude : ' + crd.latitude);
