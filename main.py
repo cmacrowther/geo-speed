@@ -24,13 +24,16 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True)
 
 class Results(ndb.Model):
-    location = ndb.GeoPtProperty(requierd=True)
+    location = ndb.GeoPtProperty(required=True)
     time = ndb.DateTimeProperty(auto_now_add=True)
     mbps_upload = ndb.FloatProperty(required=True)
     mbps_download = ndb.FloatProperty(required=True)
     isp = ndb.StringProperty()
 """
-    Handels adding the location and speed to the datastore
+    Handels adding the location and speed to the datastore. Should
+    be sent in this format
+
+    {'location' : {'longitude' : 0, 'latitude' :  0}, 'time' : 12:00, 'upload': 34.4, 'download' : 76, 'isp' : "Rogers"}
 """
 class SubmitHandler(webapp2.RequestHandler):
     def post(self):
@@ -39,7 +42,7 @@ class SubmitHandler(webapp2.RequestHandler):
 """
     return results back to the client in JSON format.
 """
-class ReturnHandler(webapp2.RquestHandler):
+class ReturnHandler(webapp2.RequestHandler):
     def post(self):
         pass
 
