@@ -17,6 +17,8 @@
 import webapp2
 import jinja2
 from google.appengine.ext import ndb
+import json
+import datetime
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(["templates"]),
@@ -53,8 +55,20 @@ class SubmitHandler(webapp2.RequestHandler):
 """
 class ReturnHandler(webapp2.RequestHandler):
     def post(self):
+        qry = JSONEncoder().encode(Result.all().fetch())
+        self.response.write(qry)
 
+class JSONEncoder(json.JSONEncoder):
 
+    def default(self, o):
+        # If this is a key, you might want to grab the actual model.
+        if isinstance(o, ndb.Key):
+            o = ndb.get(o)
+
+        if isinstance(o, ndb.Model):
+            return ndb.to_dict(o)
+        elif isinstance(o, (datetime)):
+            return str(o)  # Or whatever other date format you're OK with...
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
