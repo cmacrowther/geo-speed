@@ -17,17 +17,20 @@
 import webapp2
 import jinja2
 from google.appengine.ext import ndb
+import json
+import datetime
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(["templates"]),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-class Results(ndb.Model):
+class Result(ndb.Model):
     location = ndb.GeoPtProperty(required=True)
     time = ndb.DateTimeProperty(auto_now_add=True)
     mbps_upload = ndb.FloatProperty(required=True)
     mbps_download = ndb.FloatProperty(required=True)
+    friendly_location = ndb.StringProperty()
     isp = ndb.StringProperty()
 """
     Handels adding the location and speed to the datastore. Should
@@ -37,15 +40,35 @@ class Results(ndb.Model):
 """
 class SubmitHandler(webapp2.RequestHandler):
     def post(self):
-        pass
+        longitude = self.request.get('longitude')
+        latitude = self.request.get('latitude')
+        upload = self.request.get('upload')
+        download = self. request.get('download')
+        isp = self.request.get('isp')
+        friendly_location = self.request.get('friendly_location')
+
+        entity = Result(locaion=ndb.GeoPt(latitude, longitude), mbps_upload=upload, mbps_download=download, isp=isp, friendly_location=friendly_location)
+        entity.put()
 
 """
     return results back to the client in JSON format.
 """
 class ReturnHandler(webapp2.RequestHandler):
     def post(self):
-        pass
+        qry = JSONEncoder().encode(Result.all().fetch())
+        self.response.write(qry)
 
+class JSONEncoder(json.JSONEncoder):
+
+    def default(self, o):
+        # If this is a key, you might want to grab the actual model.
+        if isinstance(o, ndb.Key):
+            o = ndb.get(o)
+
+        if isinstance(o, ndb.Model):
+            return ndb.to_dict(o)
+        elif isinstance(o, (datetime)):
+            return str(o)  # Or whatever other date format you're OK with...
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
