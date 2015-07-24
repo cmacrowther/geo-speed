@@ -10,11 +10,13 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="./custom.css">
-<!-- Latest compiled and minified JavaScript -->
 
+<!-- Latest compiled and minified JavaScript -->
+<script src="http://openlayers.org/en/v3.7.0/build/ol.js" type="text/javascript"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
+
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content loadingModal">
@@ -25,16 +27,38 @@
         <form>
           <div class="col-xs-12 form-group">
             <label for="exampleInputEmail1">Street Address</label>
-            <input type="text" class="form-control" id="exampleAddress1" placeholder="Street Address">
+            <input type="text" class="form-control" id="address" value="">
           </div>
+            <script>
+            if (navigator.geolocation) {
+                var options = {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0
+            };
+
+            function success(pos) {
+              var crd = pos.coords;
+
+              console.log('Your current position is:');
+              console.log('Latitude : ' + crd.latitude);
+              console.log('Longitude: ' + crd.longitude);
+              console.log('More or less ' + crd.accuracy + ' meters.');
+            };
+
+            function error(err) {
+              console.warn('ERROR(' + err.code + '): ' + err.message);
+            };
+
+            navigator.geolocation.getCurrentPosition(success, error, options);
+            } else {
+                console.log ("Geolocation is not supported by this browser.");
+            }
+        </script>
         </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="$.post('/submit',{message: document.getElementById('exampleInputEmail1')},
-        function(data, status){
-            const message = data.message;
-            document.getElementById('message').innerHTML = message;
-        });">Plot my data</button>
+        <button type="button" class="btn btn-primary">Plot my data</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -55,24 +79,10 @@
     $(window).load(function(){
         $('#myModal').modal('show');
     });
+        $("#ID").click(function(e){
+        e.preventDefault()
+    });
     </script>
-    <script>
-    var x = document.getElementById("demo");
-
-    function getLocation() {
-     if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-     } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-
-    function showPosition(position) {
-         x.innerHTML = "Latitude: " + position.coords.latitude +
-        "<br>Longitude: " + position.coords.longitude;
-    }
-    window.onload = getLocation;
-    </script>
-    </div>>
+    </div>
 </body>
 </html>
