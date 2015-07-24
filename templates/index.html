@@ -98,7 +98,20 @@
 
 </div>
 <script>
-var map = new ol.Map({
+crd = null;
+    if (navigator.geolocation) {
+    var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+function success(pos) {
+    crd = pos.coords;
+  console.log('Your current position is:');
+  console.log('Latitude : ' + crd.latitude);
+  console.log('Longitude: ' + crd.longitude);
+  console.log('More or less ' + crd.accuracy + ' meters.');
+  var map = new ol.Map({
   layers: [
     new ol.layer.Tile({
       source: new ol.source.OSM()
@@ -111,10 +124,22 @@ var map = new ol.Map({
   }),
   target: 'map',
   view: new ol.View({
-    center: ol.proj.transform([37.41, 8.82], 'EPSG:4326', 'EPSG:3857'),
-    zoom: 5
+    center: ol.proj.transform([crd.longitude, crd.latitude], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 11
   })
 });
+
+};
+
+function error(err) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
+};
+
+navigator.geolocation.getCurrentPosition(success, error, options);
+} else {
+    console.log ("Geolocation is not supported by this browser.");
+}
+
 
 </script>
 </body>
