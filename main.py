@@ -15,11 +15,40 @@
 # limitations under the License.
 #
 import webapp2
+import jinja2
+from google.appengine.ext import ndb
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(["templates"]),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
+class Results(ndb.Model):
+    location = ndb.GeoPtProperty(requierd=True)
+    time = ndb.DateTimeProperty(auto_now_add=True)
+    mbps_upload = ndb.FloatProperty(required=True)
+    mbps_download = ndb.FloatProperty(required=True)
+    isp = ndb.StringProperty()
+"""
+    Handels adding the location and speed to the datastore
+"""
+class SubmitHandler(webapp2.RequestHandler):
+    def post(self):
+        pass
+
+"""
+    return results back to the client in JSON format.
+"""
+class ReturnHandler(webapp2.RquestHandler):
+    def post(self):
+        pass
+
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        template = JINJA_ENVIRONMENT.get_template("index.html")
+        self.response.write((template.render({})))
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler), ('/submit', SubmitHandler), ('/request', ReturnHandler)
 ], debug=True)

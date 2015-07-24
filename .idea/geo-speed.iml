@@ -3,7 +3,11 @@
   <component name="FacetManager">
     <facet type="google-appengine-python" name="Google App Engine (Python)">
       <configuration>
+<<<<<<< HEAD
         <option name="rootFolder" value="C:\Users\IT Garage VGD1\.babun\cygwin\home\IT Garage VGD1\geo-speed\geo-speed" />
+=======
+        <option name="rootFolder" value="C:\Users\IT Garage BAD1\Documents\It-Garage\geo-speed" />
+>>>>>>> d1b4bb3563b5867d3c30b190f8481d571dc57e4e
         <option name="sdkFolder" value="C:\Program Files (x86)\Google\google_appengine" />
         <option name="templatesFolder" value="" />
         <option name="oauth2" value="false" />
