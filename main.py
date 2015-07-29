@@ -27,7 +27,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class Result(ndb.Model):
     location = ndb.GeoPtProperty(required=True)
-    time = ndb.DateTimeProperty(auto_now_add=True)
     mbps_upload = ndb.FloatProperty(required=True)
     mbps_download = ndb.FloatProperty(required=True)
     friendly_location = ndb.StringProperty()
@@ -40,36 +39,44 @@ class Result(ndb.Model):
 """
 class SubmitHandler(webapp2.RequestHandler):
     def post(self):
-        longitude = self.request.get('longitude')
-        latitude = self.request.get('latitude')
-        upload = self.request.get('upload')
-        download = self. request.get('download')
+        longitude = float(self.request.get('longitude'))
+        latitude = float(self.request.get('latitude'))
+        upload = float(self.request.get('upload'))
+        download = float(self. request.get('download'))
         isp = self.request.get('isp')
         friendly_location = self.request.get('friendly_location')
 
-        entity = Result(locaion=ndb.GeoPt(latitude, longitude), mbps_upload=upload, mbps_download=download, isp=isp, friendly_location=friendly_location)
+        entity = Result(location =ndb.GeoPt(latitude, longitude), mbps_upload=upload, mbps_download=download, isp=isp, friendly_location=friendly_location)
         entity.put()
+
+        results = Result.query().fetch()
+        resultList = []
+        for obj in results:
+            resultList.append({'longitude': obj.location.lon,
+                               'latitude': obj.location.lat,
+                               'upload': obj.mbps_upload,
+                               'download': obj.mbps_download,
+                                'friendly_location': obj.friendly_location,
+                               'isp': obj.isp})
+        theJson = json.dumps(resultList)
+        self.response.write(theJson)
 
 """
     return results back to the client in JSON format.
 """
 class ReturnHandler(webapp2.RequestHandler):
-    def post(self):
-        qry = JSONEncoder().encode(Result.all().fetch())
-        self.response.write(qry)
-
-class JSONEncoder(json.JSONEncoder):
-
-    def default(self, o):
-        # If this is a key, you might want to grab the actual model.
-        if isinstance(o, ndb.Key):
-            o = ndb.get(o)
-
-        if isinstance(o, ndb.Model):
-            return ndb.to_dict(o)
-        elif isinstance(o, (datetime)):
-            return str(o)  # Or whatever other date format you're OK with...
-
+    def get(self):
+        results = Result.query().fetch()
+        resultList = []
+        for obj in results:
+            resultList.append({'longitude': obj.location.lon,
+                               'latitude': obj.location.lat,
+                               'upload': obj.mbps_upload,
+                               'download': obj.mbps_download,
+                                'friendly_location': obj.friendly_location,
+                               'isp': obj.isp})
+        theJson = json.dumps(resultList)
+        self.response.write(theJson)
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template("index.html")
